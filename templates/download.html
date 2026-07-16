@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Varaqalarni Yuklab Olish</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f0f2f7;
+  --surface:   #ffffff;
+  --surface2:  #f8f9fc;
+  --border:    #e4e7ef;
+  --text:      #0f1117;
+  --text2:     #5a6478;
+  --text3:     #9aa3b5;
+  --accent:    #4f6ef7;
+  --accent-h:  #3a57e8;
+  --accent-bg: #eef1fe;
+  --green:     #22c55e;
+  --green-d:   #16a34a;
+  --green-bg:  #f0fdf4;
+  --red:       #ef4444;
+  --red-bg:    #fef2f2;
+  --shadow:    0 4px 24px rgba(0,0,0,.08);
+  --radius:    14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #161a24;
+    --surface2:  #1d2130;
+    --border:    #272d3f;
+    --text:      #e8ecf4;
+    --text2:     #8b95ab;
+    --text3:     #4f5870;
+    --accent:    #5b7bff;
+    --accent-h:  #4a6bef;
+    --accent-bg: #1a2040;
+    --green:     #22c55e;
+    --green-d:   #16a34a;
+    --green-bg:  #0d2418;
+    --red:       #f87171;
+    --red-bg:    #2a1212;
+    --shadow:    0 4px 24px rgba(0,0,0,.4);
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: 56px; background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: center;
+}
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  font-weight: 700; font-size: 15px; color: var(--text);
+}
+.logo-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--green-d); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+
+/* ── WRAP ── */
+.wrap { max-width: 1020px; margin: 0 auto; padding: 28px 16px 80px; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+}
+.toolbar-left { display: flex; align-items: center; gap: 12px; }
+
+.count-pill {
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: 100px; padding: 4px 14px;
+  font-size: 13px; font-weight: 700;
+}
+
+.tb-title { font-size: 20px; font-weight: 800; letter-spacing: -.3px; }
+.tb-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+.btn-zip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px;
+  background: var(--green-d); color: #fff;
+  border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--green-d) 35%, transparent);
+  transition: opacity .15s, transform .1s;
+}
+.btn-zip:hover { opacity: .88; transform: translateY(-1px); }
+.btn-zip:active { transform: none; }
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+
+/* ── CARD ── */
+.stu-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: box-shadow .2s, transform .2s, background var(--t), border-color var(--t);
+  animation: pop .3s ease both;
+}
+.stu-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.13); transform: translateY(-2px); }
+@keyframes pop {
+  from { opacity:0; transform: translateY(12px) scale(.96); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.card-head {
+  padding: 18px 18px 14px;
+  display: flex; align-items: flex-start; gap: 13px;
+}
+
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 800; color: #fff;
+}
+
+.card-meta { flex: 1; min-width: 0; }
+.card-name {
+  font-size: 14.5px; font-weight: 700;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-patronym { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+.del-btn {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: none; border: 1.5px solid var(--border);
+  color: var(--text3); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s, color .15s; flex-shrink: 0;
+}
+.del-btn:hover { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+
+/* Tags */
+.tags {
+  padding: 0 18px 14px; display: flex; flex-wrap: wrap; gap: 6px;
+}
+.tag {
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 11.5px; font-weight: 600;
+  border: 1px solid transparent;
+}
+.tag-blue { background: var(--accent-bg); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 18%, transparent); }
+.tag-gray { background: var(--surface2); color: var(--text2); border-color: var(--border); }
+.tag-green { background: var(--green-bg); color: var(--green-d); border-color: color-mix(in srgb, var(--green) 20%, transparent); }
+.tag-amber { background: #fef3c7; color: #b45309; border-color: color-mix(in srgb, #f59e0b 20%, transparent); }
+@media (prefers-color-scheme: dark) {
+  .tag-amber { background: #422006; color: #fbbf24; border-color: color-mix(in srgb, #f59e0b 25%, transparent); }
+}
+
+.card-sep { height: 1px; background: var(--border); margin: 0 18px; }
+
+.card-foot { padding: 12px 18px; }
+.btn-dl {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; height: 40px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 9px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, transform .1s;
+}
+.btn-dl:hover { background: var(--accent-h); transform: translateY(-1px); }
+.btn-dl:active { transform: none; }
+.btn-dl.error { background: var(--red-bg); color: var(--red); cursor: default; }
+
+/* ── EMPTY ── */
+.empty {
+  text-align: center; padding: 80px 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.empty-icon { font-size: 56px; margin-bottom: 18px; }
+.empty h3 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
+.empty p { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+
+/* ── SKELETON ── */
+.skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 14px; }
+.skel {
+  height: 170px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .toolbar { flex-direction: column; align-items: flex-start; }
+  .btn-zip  { width: 100%; justify-content: center; }
+  .grid     { grid-template-columns: 1fr; }
+  .skeleton-grid { grid-template-columns: 1fr; }
+  .wrap     { padding: 20px 12px 60px; }
+  .tb-title { font-size: 17px; }
+}
+
+@media (max-width: 360px) {
+  .topbar { height: 50px; }
+  .logo   { font-size: 13px; }
+}
+
+/* ── MODAL ── */
+.modal-bg {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity .2s;
+}
+.modal-bg.on { opacity: 1; visibility: visible; }
+
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; width: min(90vw, 340px);
+  text-align: center;
+  transform: scale(.9); transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: var(--shadow);
+}
+.modal-bg.on .modal { transform: scale(1); }
+
+.modal-icon { font-size: 36px; margin-bottom: 12px; }
+.modal h3 { font-size: 17px; font-weight: 800; margin-bottom: 7px; }
+.modal p { font-size: 13px; color: var(--text2); margin-bottom: 22px; line-height: 1.5; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btns button {
+  flex: 1; height: 42px; border: none; border-radius: 9px;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s;
+}
+.modal-btns .cancel { background: var(--surface2); color: var(--text2); border: 1.5px solid var(--border); }
+.modal-btns .cancel:hover { background: var(--border); }
+.modal-btns .danger { background: var(--red); color: #fff; }
+.modal-btns .danger:hover { opacity: .85; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-icon">⬇</div>
+    Varaqalarni Yuklab Olish
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="toolbar" id="toolbar" style="display:none;">
+    <div class="toolbar-left">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="tb-title">Tayyor varaqalar</span>
+          <span class="count-pill" id="countPill">0 ta</span>
+        </div>
+        <div class="tb-sub">Har birini alohida yoki barchasini ZIP formatda yuklang</div>
+      </div>
+    </div>
+    <a href="/api/download-all" class="btn-zip" id="zipBtn">
+      ⬇&nbsp; Barchasini ZIP
+    </a>
+  </div>
+
+  <div id="content">
+    <!-- skeleton -->
+    <div class="skeleton-grid" id="skelGrid">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-icon">🗑</div>
+    <h3>O'chirishni tasdiqlang</h3>
+    <p>Bu talabaning varaqasi o'chib ketadi.<br>Uni qaytarib bo'lmaydi.</p>
+    <div class="modal-btns">
+      <button class="cancel" id="cancelBtn">Bekor</button>
+      <button class="danger" id="confirmBtn">O'chirish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── AVATAR COLORS ── */
+const AVATARS = [
+  ['#4f6ef7','#7c93ff'],['#22c55e','#4ade80'],['#f59e0b','#fbbf24'],
+  ['#ef4444','#f87171'],['#a855f7','#c084fc'],['#06b6d4','#22d3ee'],
+];
+
+/* ── DATA ── */
+let students = [];
+let deletingId = null;
+
+async function load() {
+  try {
+    const r = await fetch('/api/students');
+    students = await r.json();
+  } catch { students = []; }
+  render();
+}
+
+function render() {
+  document.getElementById('skelGrid')?.remove();
+  const content = document.getElementById('content');
+  const toolbar = document.getElementById('toolbar');
+
+  if (students.length === 0) {
+    toolbar.style.display = 'none';
+    content.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📂</div>
+        <h3>Hali varaqalar yo'q</h3>
+        <p>Ma'lumot kiritish sahifasida talabalarni qo'shing,<br>so'ng bu yerda yuklab olish imkoni bo'ladi.</p>
+      </div>`;
+    return;
+  }
+
+  toolbar.style.display = '';
+  document.getElementById('countPill').textContent = students.length + ' ta';
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+
+  students.forEach((s, i) => {
+    const [c1, c2] = AVATARS[i % AVATARS.length];
+    const initials = ((s.familiya||'')[0]||'') + ((s.ism||'')[0]||'');
+    const card = document.createElement('div');
+    card.className = 'stu-card';
+    card.style.animationDelay = (i * 0.055) + 's';
+    card.dataset.id = s.id;
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="avatar" style="background:linear-gradient(135deg,${c1},${c2})">${initials.toUpperCase()}</div>
+        <div class="card-meta">
+          <div class="card-name">${s.familiya} ${s.ism}</div>
+          <div class="card-patronym">${s.otasining_ismi}</div>
+        </div>
+        <button class="del-btn" data-id="${s.id}" title="O'chirish">✕</button>
+      </div>
+      <div class="tags">
+        <span class="tag tag-blue">${s.kurs}</span>
+        <span class="tag tag-gray">${s.fakultet}</span>
+        <span class="tag tag-green">${s.yonalish}</span>
+        ${s.stipendiya ? `<span class="tag tag-amber">🏅 ${s.stipendiya}</span>` : ''}
+      </div>
+      <div class="card-sep"></div>
+      <div class="card-foot">
+        ${s.doc_filename
+          ? `<a class="btn-dl" href="/api/download/${s.id}" download>
+               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+               Word yuklash
+             </a>`
+          : `<div class="btn-dl error">Xato yuz berdi</div>`}
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  content.innerHTML = '';
+  content.appendChild(grid);
+
+  // del buttons
+  grid.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.dataset.id));
+  });
+}
+
+/* ── DELETE MODAL ── */
+function openModal(id) {
+  deletingId = id;
+  document.getElementById('modalBg').classList.add('on');
+}
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('on');
+  deletingId = null;
+}
+
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+document.getElementById('modalBg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('confirmBtn').addEventListener('click', async () => {
+  if (!deletingId) return;
+  const id = deletingId;
+  closeModal();
+
+  // optimistic remove
+  students = students.filter(s => s.id !== id);
+  render();
+
+  try { await fetch('/api/students/' + id, { method: 'DELETE' }); }
+  catch { /* already removed from UI */ }
+});
+
+load();
+</script>
+</body>
+</html>

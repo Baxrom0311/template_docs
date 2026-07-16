@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stipendiya Ariza</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f0f2f7;
+  --surface:   #ffffff;
+  --surface2:  #f8f9fc;
+  --border:    #e4e7ef;
+  --text:      #0f1117;
+  --text2:     #5a6478;
+  --text3:     #9aa3b5;
+  --accent:    #4f6ef7;
+  --accent-h:  #3a57e8;
+  --accent-bg: #eef1fe;
+  --green:     #22c55e;
+  --green-bg:  #f0fdf4;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.07);
+  --shadow:    0 4px 24px rgba(0,0,0,.08);
+  --radius:    14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #161a24;
+    --surface2:  #1d2130;
+    --border:    #272d3f;
+    --text:      #e8ecf4;
+    --text2:     #8b95ab;
+    --text3:     #4f5870;
+    --accent:    #5b7bff;
+    --accent-h:  #4a6bef;
+    --accent-bg: #1a2040;
+    --green:     #22c55e;
+    --green-bg:  #0d2418;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+    --shadow:    0 4px 24px rgba(0,0,0,.4);
+  }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: center;
+  backdrop-filter: blur(16px);
+}
+
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  font-weight: 700; font-size: 15px; color: var(--text);
+}
+.logo-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+
+/* ─── PAGE ─── */
+.page {
+  max-width: 620px; margin: 36px auto 80px;
+  padding: 0 16px;
+}
+
+/* ─── HEADING ─── */
+.page-head { text-align: center; margin-bottom: 32px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 12px; font-weight: 700; letter-spacing: .3px;
+  margin-bottom: 16px;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .5; transform: scale(.7); }
+}
+
+.page-head h1 {
+  font-size: clamp(22px, 4vw, 30px); font-weight: 800;
+  letter-spacing: -.6px; line-height: 1.2;
+  color: var(--text); margin-bottom: 10px;
+}
+.page-head p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+/* ─── CARD ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.section-label {
+  padding: 16px 22px 12px;
+  display: flex; align-items: center; gap: 9px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-label h3 { font-size: 13px; font-weight: 700; color: var(--text2); letter-spacing: .2px; }
+
+.fields { padding: 20px 22px; display: grid; gap: 14px; }
+.row2 { grid-template-columns: 1fr 1fr; }
+.row3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ─── FIELD ─── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span2 { grid-column: span 2; }
+.field.span3 { grid-column: 1 / -1; }
+
+.field label {
+  font-size: 11px; font-weight: 700;
+  color: var(--text3); text-transform: uppercase; letter-spacing: .6px;
+}
+.field label .req { color: #ef4444; margin-left: 2px; }
+
+.field input, .field select {
+  height: 42px;
+  padding: 0 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: var(--text3); }
+.field input:focus, .field select:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa3b5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* ─── PHOTO ─── */
+.photo-section { padding: 20px 22px; }
+
+.photo-row { display: flex; gap: 16px; align-items: flex-start; }
+
+.photo-drop {
+  position: relative;
+  width: 88px; height: 116px; flex-shrink: 0;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+  cursor: pointer; overflow: hidden;
+  transition: border-color .15s, background .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-drop:hover { border-color: var(--accent); background: var(--accent-bg); }
+.photo-drop.has-img { border-style: solid; border-color: var(--green); }
+
+.photo-drop input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.photo-drop img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: none;
+}
+.photo-drop img.on { display: block; }
+
+.drop-hint {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  pointer-events: none; transition: opacity .15s;
+}
+.drop-hint svg { opacity: .3; }
+.drop-hint span { font-size: 10px; font-weight: 700; color: var(--text3); text-align: center; }
+
+.photo-desc { flex: 1; padding-top: 4px; }
+.photo-desc h4 { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.photo-desc p { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+/* ─── DIVIDER ─── */
+.divider { height: 1px; background: var(--border); margin: 0; }
+
+/* ─── SUBMIT ─── */
+.submit-area { padding: 20px 22px; }
+
+.btn-send {
+  width: 100%; height: 48px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 11px;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer; letter-spacing: .1px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  position: relative; overflow: hidden;
+  transition: background .15s, transform .1s, box-shadow .15s;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.btn-send:hover { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 50%, transparent); }
+.btn-send:active { transform: translateY(0); }
+.btn-send:disabled { opacity: .55; cursor: not-allowed; transform: none !important; box-shadow: none; }
+
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.28);
+  transform: scale(0); animation: rpl .55s linear;
+  pointer-events: none;
+}
+@keyframes rpl { to { transform: scale(5); opacity: 0; } }
+
+.spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,.35);
+  border-top-color: #fff;
+  animation: spin .65s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SUCCESS OVERLAY ─── */
+.overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity .25s;
+}
+.overlay.on { opacity: 1; visibility: visible; }
+
+.success-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 44px 36px 36px;
+  width: min(90vw, 360px); text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,.3);
+  transform: translateY(24px) scale(.93);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.overlay.on .success-box { transform: translateY(0) scale(1); }
+
+.check-wrap {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: var(--green-bg);
+  border: 2px solid color-mix(in srgb, var(--green) 25%, transparent);
+  margin: 0 auto 22px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.check-wrap::after {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--green) 15%, transparent);
+}
+
+.check-wrap svg {
+  width: 34px; height: 34px; stroke: var(--green);
+  stroke-width: 2.5; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 52; stroke-dashoffset: 52;
+}
+.overlay.on .check-wrap svg { animation: draw .5s .2s ease forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.success-box h2 {
+  font-size: 28px; font-weight: 800; letter-spacing: -.6px;
+  color: var(--text); margin-bottom: 8px;
+}
+.success-box p {
+  font-size: 13.5px; color: var(--text2); line-height: 1.65; margin-bottom: 28px;
+}
+
+.overlay-btns { display: flex; flex-direction: column; gap: 9px; }
+
+.btn-again {
+  height: 44px; border-radius: 10px;
+  background: none; border: 1.5px solid var(--border);
+  color: var(--text2); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background .15s, border-color .15s;
+}
+.btn-again:hover { background: var(--surface2); border-color: var(--text3); }
+
+/* ─── CONFETTI ─── */
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; overflow: hidden; }
+.piece {
+  position: absolute; top: -14px;
+  width: 8px; height: 11px; border-radius: 2px;
+  opacity: 0; animation: fall linear forwards;
+}
+@keyframes fall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0deg) scaleX(1); }
+  50%  { transform: translateY(50vh) rotate(360deg) scaleX(-1); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scaleX(1); }
+}
+
+/* ─── RESPONSIVE ─── */
+
+/* Tablet (≤640px) */
+@media (max-width: 640px) {
+  .page { margin-top: 24px; }
+  .page-head { margin-bottom: 22px; }
+  .page-head h1 { font-size: 22px; }
+}
+
+/* Mobile (≤480px) */
+@media (max-width: 480px) {
+  .page { padding: 0 12px; margin-top: 20px; }
+
+  .fields { padding: 14px 14px; gap: 12px; }
+  .row3 { grid-template-columns: 1fr 1fr; }
+
+  /* otasining ismi goes full width on smallest screens */
+  .row3 .field:last-child { grid-column: 1 / -1; }
+
+  .section-label  { padding: 14px 14px 11px; }
+  .photo-section  { padding: 14px 14px; }
+  .submit-area    { padding: 14px 14px; }
+
+  .success-box { padding: 32px 22px 28px; }
+  .success-box h2 { font-size: 24px; }
+}
+
+/* Very small (≤360px) */
+@media (max-width: 360px) {
+  .row3 { grid-template-columns: 1fr; }
+  .page-head h1 { font-size: 19px; }
+  .badge { font-size: 11px; padding: 4px 11px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-icon">📋</div>
+    Stipendiya Ariza
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <div class="badge"><span class="badge-dot"></span> Urganch Davlat Universiteti</div>
+    <h1>Imtihon Varaqasi<br>To'ldirish</h1>
+  </div>
+
+  <form id="form" autocomplete="off">
+    <div class="card">
+
+      <!-- SECTION 1 -->
+      <div class="section-label">
+        <div class="section-num">1</div>
+        <h3>Shaxsiy ma'lumotlar</h3>
+      </div>
+      <div class="fields row3">
+        <div class="field">
+          <label>Familiya <span class="req">*</span></label>
+          <input type="text" name="familiya" placeholder="Karimov" required>
+        </div>
+        <div class="field">
+          <label>Ism <span class="req">*</span></label>
+          <input type="text" name="ism" placeholder="Jasur" required>
+        </div>
+        <div class="field">
+          <label>Otasining ismi <span class="req">*</span></label>
+          <input type="text" name="otasining_ismi" placeholder="Aliyevich" required>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2 -->
+      <div class="section-label">
+        <div class="section-num">2</div>
+        <h3>O'quv ma'lumotlari</h3>
+      </div>
+      <div class="fields">
+        <div class="row2" style="display:grid; gap:14px; grid-template-columns:1fr 1fr;">
+          <div class="field span2" style="grid-column:1/-1;">
+            <label>Fakultet <span class="req">*</span></label>
+            <input type="text" name="fakultet" placeholder="Masalan: Tabiiy fanlar fakulteti" required>
+          </div>
+          <div class="field span2" style="grid-column:1/-1;">
+            <label>Yo'nalishi <span class="req">*</span></label>
+            <input type="text" name="yonalish" placeholder="Masalan: Matematika va informatika" required>
+          </div>
+          <div class="field">
+            <label>Kurs <span class="req">*</span></label>
+            <select name="kurs" required>
+              <option value="">— Tanlang —</option>
+              <option>1-kurs</option>
+              <option>2-kurs</option>
+              <option>3-kurs</option>
+              <option>4-kurs</option>
+              <option value="Magistratura 1-kurs">Magistr 1-kurs</option>
+              <option value="Magistratura 2-kurs">Magistr 2-kurs</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Stipendiya nomi <span class="req">*</span></label>
+            <input type="text" name="stipendiya" placeholder="Ulug'bek nomidagi" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3 — PHOTO -->
+      <div class="section-label">
+        <div class="section-num">3</div>
+        <h3>Rasm (3×4) <span style="color:#ef4444;">*</span></h3>
+      </div>
+      <div class="photo-section">
+        <div class="photo-row">
+          <div class="photo-drop" id="photoDrop">
+            <input type="file" name="photo" id="photoInput" accept="image/jpeg,image/jpg,image/png,image/webp" required>
+            <img id="photoPreview" alt="">
+            <div class="drop-hint" id="dropHint">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Rasm<br>yuklash</span>
+            </div>
+          </div>
+          <div class="photo-desc">
+            <h4>3×4 formatdagi rasm</h4>
+            <p>JPG yoki PNG formatda yuklang. Rasm Word hujjatga avtomatik 3×4 sm o'lchamda kiritiladi. Rasm yuklamasangiz bo'sh qoladi.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <div class="submit-area">
+        <button type="submit" class="btn-send" id="sendBtn">
+          <span id="sendLabel">Yuborish</span>
+        </button>
+      </div>
+
+    </div><!-- .card -->
+  </form>
+</main>
+
+<!-- SUCCESS OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="success-box">
+    <div class="check-wrap">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Rahmat!</h2>
+    <p>Varaqangiz muvaffaqiyatli yuborildi va hujjat tayyor bo'ldi.</p>
+    <div class="overlay-btns">
+      <button class="btn-again" id="againBtn">Yana birini yuborish</button>
+    </div>
+  </div>
+</div>
+
+<div id="confetti"></div>
+
+<script>
+/* ── PHOTO ── */
+const photoInput = document.getElementById('photoInput');
+const photoPreview = document.getElementById('photoPreview');
+const photoDrop = document.getElementById('photoDrop');
+const dropHint = document.getElementById('dropHint');
+
+photoInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    photoPreview.src = ev.target.result;
+    photoPreview.classList.add('on');
+    dropHint.style.opacity = '0';
+    photoDrop.classList.add('has-img');
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ── RIPPLE ── */
+document.getElementById('sendBtn').addEventListener('pointerdown', function(e) {
+  const btn = this;
+  const r = btn.getBoundingClientRect();
+  const size = Math.max(r.width, r.height) * 2.5;
+  const rpl = document.createElement('span');
+  rpl.className = 'ripple';
+  rpl.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size/2}px;top:${e.clientY - r.top - size/2}px`;
+  btn.appendChild(rpl);
+  setTimeout(() => rpl.remove(), 600);
+});
+
+/* ── SUBMIT ── */
+const form = document.getElementById('form');
+const sendBtn = document.getElementById('sendBtn');
+const sendLabel = document.getElementById('sendLabel');
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  sendBtn.disabled = true;
+  sendLabel.style.display = 'none';
+  const sp = document.createElement('div');
+  sp.className = 'spinner';
+  sendBtn.appendChild(sp);
+
+  try {
+    const fd = new FormData(form);
+    const res = await fetch('/api/students', { method: 'POST', body: fd });
+    if (!res.ok) { const j = await res.json(); throw new Error(j.error || 'Server xatosi'); }
+    showSuccess();
+  } catch(err) {
+    alert('Xatolik: ' + err.message);
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.removeChild(sp);
+    sendLabel.style.display = '';
+  }
+});
+
+/* ── SUCCESS ── */
+function showSuccess() {
+  document.getElementById('overlay').classList.add('on');
+  confetti();
+}
+
+document.getElementById('againBtn').addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('on');
+  form.reset();
+  photoPreview.src = '';
+  photoPreview.classList.remove('on');
+  dropHint.style.opacity = '';
+  photoDrop.classList.remove('has-img');
+  document.getElementById('confetti').innerHTML = '';
+});
+
+/* ── CONFETTI ── */
+const COLORS = ['#4f6ef7','#22c55e','#f59e0b','#ef4444','#a855f7','#06b6d4','#f97316','#ec4899'];
+function confetti() {
+  const wrap = document.getElementById('confetti');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('div');
+    p.className = 'piece';
+    const sz = 6 + Math.random() * 7;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${COLORS[i % COLORS.length]};
+      width:${sz}px; height:${sz*1.5}px;
+      border-radius:${Math.random() > .5 ? '50%' : '2px'};
+      animation-delay:${Math.random()*.7}s;
+      animation-duration:${1.6+Math.random()*1.2}s;
+    `;
+    wrap.appendChild(p);
+  }
+  setTimeout(() => wrap.innerHTML = '', 3500);
+}
+
+/* Escape closes overlay */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('overlay').classList.remove('on');
+});
+</script>
+</body>
+</html>
